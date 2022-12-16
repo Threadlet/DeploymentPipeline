@@ -20,10 +20,7 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/workspace\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/workspace\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/workspace\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/workspace\" ; docker-compose -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
-if $USE_DOCKER_STACK ; then
-  remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/workspace\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/workspace/$DOCKER_COMPOSE_PREFIX\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/workspace/$DOCKER_COMPOSE_PREFIX\" -xjv ; log 'Launching docker stack deploy...' ; cd \"\$HOME/workspace/$DOCKER_COMPOSE_PREFIX\" ; docker stack deploy -c \"$DOCKER_COMPOSE_FILENAME\" --prune \"$DOCKER_COMPOSE_PREFIX\""
-fi
+remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log \$\? ; log 'Removing workspace...'; rm -rf \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; docker-compose -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
