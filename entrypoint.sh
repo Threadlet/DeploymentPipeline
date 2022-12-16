@@ -20,7 +20,7 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/\$DOCKER_COMPOSE_PREFIX\" ; docker-compose -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
+remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; docker-compose -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
