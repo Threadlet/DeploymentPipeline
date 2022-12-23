@@ -20,7 +20,7 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; log 'Running wizardry...' ; sed -i 's|.:/app|/tmp:/tmp|g' .env* ; sed -i 's|.:/app|/tmp:/tmp|g' docker-compose.yml ;docker-compose up --build; "
+remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; log 'Running wizardry...' ; sed -i 's|.:/app|/tmp:/tmp|g' .env* ; sed -i 's|.:/app|/tmp:/tmp|g' docker-compose.yml ;docker-compose up --build -d; "
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
