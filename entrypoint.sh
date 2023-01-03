@@ -20,7 +20,7 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/frontend\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/frontend\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/frontend\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/frontend\" ; docker-compose -f docker-compose.production.yml up --build -d; "
+remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/frontend\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/frontend\" ; trap cleanup ERR ; log 'Unpacking workspace...' ; tar -C \"\$HOME/frontend\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/frontend\" ; docker-compose -f docker-compose.production.yml up --build -d; exit; "
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
