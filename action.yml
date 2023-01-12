@@ -30,3 +30,4 @@ runs:
     SSH_PRIVATE_KEY: ${{ inputs.ssh_private_key }}
     DOCKER_COMPOSE_FILENAME: ${{ inputs.docker_compose_filename }}
     DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
+    CLEANUP_OPTION: ${{ inputs.cleanup_option}}
