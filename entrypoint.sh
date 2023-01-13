@@ -20,7 +20,12 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; sudo rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; log 'Running wizardry...' ; sed -i 's|.:/app|/tmp:/tmp|g' .env* ; sed -i 's|.:/app|/tmp:/tmp|g' docker-compose.yml ; docker-compose up --build -d ; "
+if [$CLEANUP_OPTION != 'KEEP']
+then
+  remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; sudo rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; trap cleanup exit; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; log 'Running wizardry...' ; sed -i 's|.:/app|/tmp:/tmp|g' .env* ; sed -i 's|.:/app|/tmp:/tmp|g' docker-compose.yml ; docker-compose up --build -d ; "
+else
+  remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; sudo rm -rf \"\$HOME/prosebit\" ; } ; log 'Creating workspace directory...' ; mkdir -p \"\$HOME/prosebit\" ; log 'Unpacking workspace...' ; tar -C \"\$HOME/prosebit\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/prosebit\" ; log 'Running wizardry...' ; sed -i 's|.:/app|/tmp:/tmp|g' .env* ; sed -i 's|.:/app|/tmp:/tmp|g' docker-compose.yml ; docker-compose up --build -d ; "
+fi
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
